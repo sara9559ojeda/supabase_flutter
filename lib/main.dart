@@ -1,37 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'app/data/supabase/supabase_config.dart';
-import 'app/pages/login_page.dart';
-import 'app/pages/home_page.dart';
-import 'app/controllers/auth_controller.dart';
+import 'core/config/supabase_config.dart';
+import 'pages/login_page.dart';
+import 'pages/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Inicializar dotenv y Supabase
-  await SupabaseConfig.initialize();
-
-  // Inicializar AuthController
-  Get.put(AuthController());
-
-  runApp(MyApp());
+  await SupabaseConfig.initialize(); // Inicializa Supabase
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Huella de Carbono',
-      theme: ThemeData(primarySwatch: Colors.green),
-      // Rutas nombradas
+      initialRoute: '/login',
       getPages: [
         GetPage(name: '/login', page: () => LoginPage()),
         GetPage(name: '/home', page: () => HomePage()),
       ],
-      // Página inicial según si está autenticado
-      home: SupabaseConfig.isAuthenticated ? HomePage() : LoginPage(),
     );
   }
 }
